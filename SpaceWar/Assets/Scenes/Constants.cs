@@ -5,5 +5,15 @@ using UnityEngine;
 public enum TagNames
 {
     Missile1,
-    EnemyMissile
+    EnemyMissile,
+    EnemyType1,
+    EnemyType2,
+    EnemyType3
+}
+
+public enum EnemiesType
+{
+    Type1,
+    Type2,
+    Type3
 }

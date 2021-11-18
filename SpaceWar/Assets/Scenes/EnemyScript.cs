@@ -6,20 +6,27 @@ public class EnemyScript : MonoBehaviour
 {
     public float missileMovingSpeed;
     public Sprite MissileSprite;
-
+    private int n;
     // Start is called before the first frame update
     void Start()
     {
-        
+        n = 1200;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+
+        if (UnityEngine.Random.Range(0, 1500) % n == 0)
         {
+            if (n > 200)
+            {
+                n /= 2;
+                //Debug.Log(n);
+
+            }
             LunchMissileFrom(this.transform.position - new Vector3(0, 0.2f, 0));
-            //Debug.Log(this.transform.position);
+            //Debug.Log(n);
 
         }
     }

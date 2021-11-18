@@ -46,7 +46,7 @@ public class ShipMove : MonoBehaviour
         if (Collider.gameObject.CompareTag(TagNames.EnemyMissile.ToString()))
         {
             Explode(Collider.gameObject);
-            Debug.Log("collision");
+            //Debug.Log("collision");
         }
     }
 
@@ -68,7 +68,7 @@ public class ShipMove : MonoBehaviour
         spriteRenderer.sprite = MissileSprite;
         go1.tag = TagNames.Missile1.ToString();
 
-        BoxCollider2D bc = go1.AddComponent<BoxCollider2D>() as BoxCollider2D;
+        PolygonCollider2D bc = go1.AddComponent<PolygonCollider2D>() as PolygonCollider2D;
         bc.isTrigger = true;
 
         missileRb.velocity = transform.up * -1 * missileMovingSpeed;
