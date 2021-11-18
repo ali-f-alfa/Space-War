@@ -34,16 +34,46 @@ public class ShipMove : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameObject go1 = new GameObject();
-            go1.name = "moving missile";
-            Rigidbody2D missileRb = go1.AddComponent<Rigidbody2D>();
-            missileRb.bodyType = RigidbodyType2D.Kinematic;
-            go1.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);
-            SpriteRenderer spriteRenderer = go1.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = MissileSprite;
-            missileRb.velocity = transform.up * -1* missileMovingSpeed;
-            //Debug.Log(MissileRb.velocity);
+            LunchMissileFrom(this.transform.position + new Vector3(0, 0.4f, 0));
+            //Debug.Log(this.transform.position);
 
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D Collider)
+    {
+
+        if (Collider.gameObject.CompareTag(TagNames.EnemyMissile.ToString()))
+        {
+            Explode(Collider.gameObject);
+            Debug.Log("collision");
+        }
+    }
+
+    private void Explode(GameObject EnemyMissile)
+    {
+        //todo: heart decrease on UI and restart player
+        this.gameObject.SetActive(false);
+        EnemyMissile.SetActive(false);
+    }
+
+    private GameObject LunchMissileFrom(Vector3 position) 
+    {
+        GameObject go1 = new GameObject();
+        go1.name = "moving missile";
+        Rigidbody2D missileRb = go1.AddComponent<Rigidbody2D>();
+        missileRb.bodyType = RigidbodyType2D.Kinematic;
+        go1.transform.position = position;
+        SpriteRenderer spriteRenderer = go1.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = MissileSprite;
+        go1.tag = TagNames.Missile1.ToString();
+
+        BoxCollider2D bc = go1.AddComponent<BoxCollider2D>() as BoxCollider2D;
+        bc.isTrigger = true;
+
+        missileRb.velocity = transform.up * -1 * missileMovingSpeed;
+
+        return go1;
+    }
+
 }
