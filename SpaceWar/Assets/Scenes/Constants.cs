@@ -9,7 +9,8 @@ public enum TagNames
     EnemyType1,
     EnemyType2,
     EnemyType3,
-    RemoveZone
+    RemoveZone,
+    Gift1
 }
 
 public enum EnemiesType

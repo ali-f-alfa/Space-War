@@ -6,6 +6,7 @@ public class EnemyScript : MonoBehaviour
 {
     public float missileMovingSpeed;
     public Sprite MissileSprite;
+    public Sprite GiftSprit;
     public EventSystemCustom eventSystem;
     public EnemiesType TypeOfEnemy;
     private ShipMove Player;
@@ -32,6 +33,10 @@ public class EnemyScript : MonoBehaviour
             Explode(Collider.gameObject);
             Player.Score += ScoreOfKillingEnemy();
             eventSystem.OnCharacterKillEnemy.Invoke();
+
+            if ((UnityEngine.Random.Range(0, 10) % 10 == 0))
+                ReleaseGift();  
+
             //Debug.Log("collision");
         }
     }
@@ -76,6 +81,30 @@ public class EnemyScript : MonoBehaviour
         missileRb.velocity = transform.up * -1 * missileMovingSpeed;
 
         return go1;
+    }
+
+    public GameObject ReleaseGift()
+    {
+        GameObject gift = new GameObject();
+        gift.name = "released gift";
+
+        Rigidbody2D giftRb = gift.AddComponent<Rigidbody2D>();
+        giftRb.bodyType = RigidbodyType2D.Kinematic;
+
+        gift.transform.position = this.transform.position - new Vector3(0, 0.2f, 0);
+        //gift.transform.Rotate(new Vector3(180, 0, 0));
+
+        SpriteRenderer spriteRenderer = gift.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = GiftSprit;
+
+        gift.tag = TagNames.Gift1.ToString();
+
+        BoxCollider2D bc = gift.AddComponent<BoxCollider2D>() as BoxCollider2D;
+        bc.isTrigger = true;
+
+        giftRb.velocity = transform.up * -1 * missileMovingSpeed * 0.5f;
+
+        return gift;
     }
 
 }

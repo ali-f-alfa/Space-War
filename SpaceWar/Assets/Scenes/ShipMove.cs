@@ -55,6 +55,15 @@ public class ShipMove : MonoBehaviour
             eventSystem.OnCharacterHit.Invoke();
             //Debug.Log("collision");
         }
+
+        if (Collider.gameObject.CompareTag(TagNames.Gift1.ToString()))
+        {
+            //todo: update gun
+            this.Score += 50;
+            GameObject.Destroy(Collider.gameObject);
+            eventSystem.OnCharacterEatGift.Invoke();
+            //Debug.Log("collision");
+        }
     }
 
     private void Explode(GameObject EnemyMissile)

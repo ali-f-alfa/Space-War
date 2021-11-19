@@ -985,7 +985,10 @@ MonoBehaviour:
   EnemyType1Sprite: {fileID: 21300000, guid: 7de0ef6dd9730c641a358aea94d9662b, type: 3}
   EnemyType2Sprite: {fileID: 21300000, guid: 35b3de3591113784ca7e90cfd3054333, type: 3}
   EnemyType3Sprite: {fileID: 21300000, guid: 5decf5f3221c19547bbbf23159e99cc5, type: 3}
+  Gift1Sprit: {fileID: 21300000, guid: 14da32e207aadea479caed9100c8f0ab, type: 3}
   eventSystem: {fileID: 2060579054}
+  allAliveEnemies: []
+  rateOfEnemystrike: 0
 --- !u!4 &1136451799
 Transform:
   m_ObjectHideFlags: 0

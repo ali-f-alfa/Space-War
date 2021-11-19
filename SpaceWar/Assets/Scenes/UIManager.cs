@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         eventSystem.OnCharacterKillEnemy.AddListener(UpdateScore);
+        eventSystem.OnCharacterEatGift.AddListener(UpdateScore);
         eventSystem.OnCharacterHit.AddListener(DecreaseLife);
         //eventSystem.OnGameEndedWon.AddListener(EndGameWon);
         //eventSystem.OnGameEndedLost.AddListener(EndGameLost);

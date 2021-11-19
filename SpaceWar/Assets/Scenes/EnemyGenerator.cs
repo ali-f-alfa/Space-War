@@ -10,6 +10,7 @@ public class EnemyGenerator : MonoBehaviour
     public Sprite EnemyType1Sprite;
     public Sprite EnemyType2Sprite;
     public Sprite EnemyType3Sprite;
+    public Sprite Gift1Sprit;
 
     public EventSystemCustom eventSystem;
     public List<GameObject> allAliveEnemies;
@@ -93,6 +94,7 @@ public class EnemyGenerator : MonoBehaviour
         enemyScript.MissileSprite = this.MissileSprite;
         enemyScript.eventSystem = this.eventSystem;
         enemyScript.TypeOfEnemy = enemyType;
+        enemyScript.GiftSprit = Gift1Sprit;
 
         if (enemyType == EnemiesType.Type1)
         {
