@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 
 
 public class EnemyGenerator : MonoBehaviour
@@ -21,7 +23,7 @@ public class EnemyGenerator : MonoBehaviour
     void Start()
     {
         Level = 1;
-        rateOfEnemystrike = 90;
+        rateOfEnemystrike = 50;
         isLoading = false;
         allAliveEnemies = new List<GameObject>();
         initializeEnemiesForLevel(1);
@@ -36,14 +38,24 @@ public class EnemyGenerator : MonoBehaviour
             StartCoroutine(StartNewLevel(++Level));
         }
 
-        else if ((UnityEngine.Random.Range(0, 1000) % rateOfEnemystrike == 0) && !isLoading)
+        else if (isTimetoLunchMissile() && !isLoading)
         {
-            allAliveEnemies[Random.Range(0, allAliveEnemies.Count)].GetComponent<EnemyScript>().LunchMissile();
+            allAliveEnemies[UnityEngine.Random.Range(0, allAliveEnemies.Count)].GetComponent<EnemyScript>().LunchMissile();
         }
         
 
     }
+    public bool isTimetoLunchMissile()
+    {
+        if ((Time.frameCount % 10 == 0)) {
+            if ((UnityEngine.Random.Range(0, rateOfEnemystrike) % ((int)(rateOfEnemystrike / (Math.Sqrt(allAliveEnemies.Count)))+1) == 0))
+            {
+                return true;
+            }
+        }
+        return false;
 
+    }
     public void initializeEnemiesForLevel(int L)
     {
         if (L == 1)
@@ -127,8 +139,10 @@ public class EnemyGenerator : MonoBehaviour
     
     public IEnumerator StartNewLevel(int level)
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2.5f);
         initializeEnemiesForLevel(level);
+        if (rateOfEnemystrike >= 3)
+            rateOfEnemystrike = (int)(rateOfEnemystrike/1.5f);
         this.isLoading = false;
     }
 }
