@@ -10,6 +10,8 @@ TagManager:
   - EnemyType2
   - EnemyType3
   - RemoveZone
+  - Gift1
+  - Heart
   layers:
   - Default
   - TransparentFX
