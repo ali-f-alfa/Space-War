@@ -51,8 +51,10 @@ public class ShipMove : MonoBehaviour
 
         if (Collider.gameObject.CompareTag(TagNames.EnemyMissile.ToString()) && !Isblinking)
         {
+            Life -= 1;
             Explode(Collider.gameObject);
             eventSystem.OnCharacterHit.Invoke();
+            BlinkPlayer(5);
             //Debug.Log("collision");
         }
 
@@ -62,6 +64,18 @@ public class ShipMove : MonoBehaviour
             this.Score += 50;
             GameObject.Destroy(Collider.gameObject);
             eventSystem.OnCharacterEatGift.Invoke();
+            //Debug.Log("collision");
+        }
+
+        if (Collider.gameObject.CompareTag(TagNames.Heart.ToString()))
+        {
+            //todo: update gun
+            if (Life < 3)
+            {
+                Life++;
+                eventSystem.OnCharacterHit.Invoke();
+            }
+            GameObject.Destroy(Collider.gameObject);
             //Debug.Log("collision");
         }
     }

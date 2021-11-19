@@ -13,6 +13,7 @@ public class EnemyGenerator : MonoBehaviour
     public Sprite EnemyType2Sprite;
     public Sprite EnemyType3Sprite;
     public Sprite Gift1Sprit;
+    public Sprite HeartSprit;
 
     public EventSystemCustom eventSystem;
     public List<GameObject> allAliveEnemies;
@@ -38,7 +39,7 @@ public class EnemyGenerator : MonoBehaviour
             StartCoroutine(StartNewLevel(++Level));
         }
 
-        else if (isTimetoLunchMissile() && !isLoading)
+        if (isTimetoLunchMissile() && !isLoading)
         {
             allAliveEnemies[UnityEngine.Random.Range(0, allAliveEnemies.Count)].GetComponent<EnemyScript>().LunchMissile();
         }
@@ -107,6 +108,7 @@ public class EnemyGenerator : MonoBehaviour
         enemyScript.eventSystem = this.eventSystem;
         enemyScript.TypeOfEnemy = enemyType;
         enemyScript.GiftSprit = Gift1Sprit;
+        enemyScript.HeartSprit = HeartSprit;
 
         if (enemyType == EnemiesType.Type1)
         {

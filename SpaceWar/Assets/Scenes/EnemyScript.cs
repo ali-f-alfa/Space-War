@@ -7,6 +7,7 @@ public class EnemyScript : MonoBehaviour
     public float missileMovingSpeed;
     public Sprite MissileSprite;
     public Sprite GiftSprit;
+    public Sprite HeartSprit;
     public EventSystemCustom eventSystem;
     public EnemiesType TypeOfEnemy;
     private ShipMove Player;
@@ -57,6 +58,8 @@ public class EnemyScript : MonoBehaviour
         GameObject.Destroy(missile);
         GameObject.Destroy(this.gameObject);
         EnemyGenerator.allAliveEnemies.Remove(this.gameObject);
+        if (EnemyGenerator.allAliveEnemies.Count == 0)
+            ReleaseHeart();
     }
 
     public GameObject LunchMissile()
@@ -103,6 +106,30 @@ public class EnemyScript : MonoBehaviour
         bc.isTrigger = true;
 
         giftRb.velocity = transform.up * -1 * missileMovingSpeed * 0.5f;
+
+        return gift;
+    }
+
+    public GameObject ReleaseHeart()
+    {
+        GameObject gift = new GameObject();
+        gift.name = "released heart";
+
+        Rigidbody2D giftRb = gift.AddComponent<Rigidbody2D>();
+        giftRb.bodyType = RigidbodyType2D.Kinematic;
+
+        gift.transform.position = this.transform.position - new Vector3(0, 0.2f, 0);
+        //gift.transform.Rotate(new Vector3(180, 0, 0));
+
+        SpriteRenderer spriteRenderer = gift.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = HeartSprit;
+
+        gift.tag = TagNames.Heart.ToString();
+
+        BoxCollider2D bc = gift.AddComponent<BoxCollider2D>() as BoxCollider2D;
+        bc.isTrigger = true;
+
+        giftRb.velocity = transform.up * -1 * missileMovingSpeed * 0.4f;
 
         return gift;
     }

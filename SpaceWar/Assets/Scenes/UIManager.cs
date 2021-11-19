@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     {
         eventSystem.OnCharacterKillEnemy.AddListener(UpdateScore);
         eventSystem.OnCharacterEatGift.AddListener(UpdateScore);
-        eventSystem.OnCharacterHit.AddListener(DecreaseLife);
+        eventSystem.OnCharacterHit.AddListener(UpdateLife);
         //eventSystem.OnGameEndedWon.AddListener(EndGameWon);
         //eventSystem.OnGameEndedLost.AddListener(EndGameLost);
         Player = GameObject.Find("Ship").GetComponent<ShipMove>();
@@ -27,15 +27,12 @@ public class UIManager : MonoBehaviour
         ScoreText.text = Player.Score.ToString();
     }
 
-    public void DecreaseLife()
+    public void UpdateLife()
     {
-        Player.Life -= 1;    
-        
         if (Player.Life <= 0)
             EndGameLost();
 
         Life.text = Player.Life.ToString();
-        Player.BlinkPlayer(5);
     }
 
     //public void EndGameWon()
