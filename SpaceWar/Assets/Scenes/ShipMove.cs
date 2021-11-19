@@ -44,11 +44,6 @@ public class ShipMove : MonoBehaviour
             transform.position -= moveVector;
         }
 
-        if (Input.GetKey(KeyCode.A) && (transform.position.x >= -9.1))
-        {
-            transform.position -= moveVector;
-        }
-
         if (Input.GetKeyDown(KeyCode.Space) && !isRecharging)
         {
             if ((Energy >= 5) )
