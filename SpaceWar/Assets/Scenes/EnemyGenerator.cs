@@ -15,10 +15,12 @@ public class EnemyGenerator : MonoBehaviour
     public Sprite Gift1Sprit;
     public Sprite HeartSprit;
 
+    public AudioSource ExplosionSound;
+
     public EventSystemCustom eventSystem;
     public List<GameObject> allAliveEnemies;
     public int rateOfEnemystrike;
-    private int Level;
+    public int Level;
     private bool isLoading;
 
     void Start()
@@ -28,6 +30,7 @@ public class EnemyGenerator : MonoBehaviour
         isLoading = false;
         allAliveEnemies = new List<GameObject>();
         initializeEnemiesForLevel(1);
+        ExplosionSound = gameObject.GetComponent<AudioSource>();
     }
 
     
@@ -43,7 +46,6 @@ public class EnemyGenerator : MonoBehaviour
         {
             allAliveEnemies[UnityEngine.Random.Range(0, allAliveEnemies.Count)].GetComponent<EnemyScript>().LunchMissile();
         }
-        
 
     }
     public bool isTimetoLunchMissile()
@@ -61,31 +63,20 @@ public class EnemyGenerator : MonoBehaviour
     {
         if (L == 1)
         {
-            for (int i = 0; i < 9; i++)
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type3, new Vector2(2f * (i - 4), 4f)));
-            for (int i = 0; i < 13; i++)
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(1.3f * (i - 6), 2.5f)));
-            for (int i = 0; i < 15; i++)
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type1, new Vector2(1.1f * (i - 7), 1.2f)));
+            for (int i = 0; i < 17; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type1, new Vector2(1.1f * (i - 8), 3f)));
         }
         else if (L == 2)
         {
-            for (int i = 0; i < 4; i++) {
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type3, new Vector2(2f * (2*i - 4), 4f))); 
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(2f * (2*i - 3), 4f))); 
-            }
             for (int i = 0; i < 13; i++)
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(1.3f * (i - 6), 2.5f)));
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(1.3f * (i - 6), 4)));
             for (int i = 0; i < 15; i++)
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type1, new Vector2(1.1f * (i - 7), 1.2f)));
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type1, new Vector2(1.1f * (i - 7), 2.5f)));
         }
         else
         {
-            for (int i = 0; i < 4; i++)
-            {
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type3, new Vector2(2f * (2 * i - 4), 4f)));
-                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(2f * (2 * i - 3), 4f)));
-            }
+            for (int i = 0; i < 9; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type3, new Vector2(2f * (i - 4), 4f)));
             for (int i = 0; i < 13; i++)
                 allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(1.3f * (i - 6), 2.5f)));
             for (int i = 0; i < 15; i++)
@@ -120,7 +111,7 @@ public class EnemyGenerator : MonoBehaviour
         {
             spriteRenderer.sprite = EnemyType2Sprite;
             enemy.tag = TagNames.EnemyType2.ToString();
-            spriteRenderer.color = new Color(0.2f, 0.3f, 0.9f, 1);
+            spriteRenderer.color = new Color(0.5f, 0.8f, 0.3f, 1);
 
         }
         else if (enemyType == EnemiesType.Type3)
@@ -143,7 +134,9 @@ public class EnemyGenerator : MonoBehaviour
     {
         yield return new WaitForSeconds(2.5f);
         initializeEnemiesForLevel(level);
-        if (rateOfEnemystrike >= 3)
+        eventSystem.OnUpdateLevel.Invoke();
+
+        if (rateOfEnemystrike >= 5)
             rateOfEnemystrike = (int)(rateOfEnemystrike/1.5f);
         this.isLoading = false;
     }

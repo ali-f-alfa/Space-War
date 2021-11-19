@@ -14,16 +14,22 @@ public class ShipMove : MonoBehaviour
     public int Life;
     public int Score;
     private bool Isblinking;
+    private AudioSource ExplosionSound;
+    public int Energy;
+    private bool isRecharging;
 
     void Start()
     {
         Life = 3;
+        Energy = 100;
         Score = 0;
         Isblinking = false;
+        isRecharging = false;
         moveVector = new Vector3(1 * shipMovingSpeed, 0, 0);
+        ExplosionSound = GetComponent<AudioSource>();
         //jumpAmount = 1f;
         //MissileRb = Missile.GetComponent<Rigidbody2D>();
-        
+
     }
 
     void Update()
@@ -38,11 +44,37 @@ public class ShipMove : MonoBehaviour
             transform.position -= moveVector;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.A) && (transform.position.x >= -9.1))
         {
-            LunchMissileFrom(this.transform.position + new Vector3(0, 0.4f, 0));
-            //Debug.Log(this.transform.position);
+            transform.position -= moveVector;
+        }
 
+        if (Input.GetKeyDown(KeyCode.Space) && !isRecharging)
+        {
+            if ((Energy >= 5) )
+            {
+                LunchMissileFrom(this.transform.position + new Vector3(0, 0.4f, 0));
+                Energy -= 5;
+                eventSystem.OnUpdateEnergy.Invoke();
+
+                //Debug.Log(this.transform.position);
+            }
+            else
+            {
+                StartCoroutine(WaitForRecharge());  
+            }
+        }
+
+        if( (Energy < 100) && (Time.frameCount % 10 == 0) && (GameObject.Find("moving missile") == null))
+        {
+            if ((100 - Energy) < 2)
+                Energy = 100;
+            else
+                Energy += 2;
+
+            if (Energy > 100)
+                Energy = 100;
+            eventSystem.OnUpdateEnergy.Invoke();
         }
     }
 
@@ -52,9 +84,16 @@ public class ShipMove : MonoBehaviour
         if (Collider.gameObject.CompareTag(TagNames.EnemyMissile.ToString()) && !Isblinking)
         {
             Life -= 1;
+
             Explode(Collider.gameObject);
             eventSystem.OnCharacterHit.Invoke();
-            BlinkPlayer(5);
+
+            if (Life > 0)
+                BlinkPlayer(5);
+            
+            else
+                GameObject.Destroy(this.gameObject);
+
             //Debug.Log("collision");
         }
 
@@ -82,7 +121,7 @@ public class ShipMove : MonoBehaviour
 
     private void Explode(GameObject EnemyMissile)
     {
-        //this.gameObject.SetActive(false);
+        ExplosionSound.Play();
         GameObject.Destroy(EnemyMissile);
     }
 
@@ -121,5 +160,15 @@ public class ShipMove : MonoBehaviour
         }
         r.enabled = true;
         this.Isblinking = false;
+    }
+
+    public IEnumerator WaitForRecharge()
+    {
+        isRecharging = true;
+        //Debug.Log("isRecharging");
+        yield return new WaitForSeconds(2.5f);
+        isRecharging = false;
+        //Debug.Log("isRecharging finished");
+
     }
 }

@@ -18,6 +18,7 @@ public class EnemyScript : MonoBehaviour
     {
         EnemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
         Player = GameObject.Find("Ship").GetComponent<ShipMove>();
+
     }
 
     // Update is called once per frame
@@ -31,11 +32,13 @@ public class EnemyScript : MonoBehaviour
     {
         if (Collider.gameObject.CompareTag(TagNames.Missile1.ToString()))
         {
+            EnemyGenerator.ExplosionSound.Play();
             Explode(Collider.gameObject);
             Player.Score += ScoreOfKillingEnemy();
             eventSystem.OnCharacterKillEnemy.Invoke();
 
-            if ((UnityEngine.Random.Range(0, 10) % 10 == 0))
+
+            if ((UnityEngine.Random.Range(0, 25) % 25 == 0))
                 ReleaseGift();  
 
             //Debug.Log("collision");
