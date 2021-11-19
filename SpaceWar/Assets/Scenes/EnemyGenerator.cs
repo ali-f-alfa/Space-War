@@ -10,6 +10,8 @@ public class EnemyGenerator : MonoBehaviour
     public Sprite EnemyType2Sprite;
     public Sprite EnemyType3Sprite;
 
+    public EventSystemCustom eventSystem;
+
     void Start()
     {
         initializeEnemies();
@@ -41,12 +43,17 @@ public class EnemyGenerator : MonoBehaviour
 
         SpriteRenderer spriteRenderer = enemy.AddComponent<SpriteRenderer>();
 
+        EnemyScript enemyScript = enemy.AddComponent<EnemyScript>();
+        enemyScript.missileMovingSpeed = this.missileMovingSpeed;
+        enemyScript.MissileSprite = this.MissileSprite;
+        enemyScript.eventSystem = this.eventSystem;
+        enemyScript.TypeOfEnemy = enemyType;
+
         if (enemyType == EnemiesType.Type1)
         {
             spriteRenderer.sprite = EnemyType1Sprite;
             enemy.tag = TagNames.EnemyType1.ToString();
             spriteRenderer.color = new Color(1, 1, 0, 1);
-
         }
         else if (enemyType == EnemiesType.Type2)
         {
@@ -63,9 +70,6 @@ public class EnemyGenerator : MonoBehaviour
 
         }
 
-        EnemyScript enemyScript = enemy.AddComponent<EnemyScript>();
-        enemyScript.missileMovingSpeed = this.missileMovingSpeed;
-        enemyScript.MissileSprite = this.MissileSprite;
 
         PolygonCollider2D bc = enemy.AddComponent<PolygonCollider2D>() as PolygonCollider2D;
         bc.isTrigger = true;

@@ -7,9 +7,13 @@ public class EnemyScript : MonoBehaviour
     public float missileMovingSpeed;
     public Sprite MissileSprite;
     private int n;
+    public EventSystemCustom eventSystem;
+    public EnemiesType TypeOfEnemy;
+    private ShipMove Player;
     // Start is called before the first frame update
     void Start()
     {
+        Player = GameObject.Find("Ship").GetComponent<ShipMove>();
         n = 1200;
     }
 
@@ -34,18 +38,31 @@ public class EnemyScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D Collider)
     {
-
         if (Collider.gameObject.CompareTag(TagNames.Missile1.ToString()))
         {
             Explode(Collider.gameObject);
-            Debug.Log("collision");
+            Player.Score += ScoreOfKillingEnemy();
+            eventSystem.OnCharacterKillEnemy.Invoke();
+            //Debug.Log("collision");
         }
+    }
+    private int ScoreOfKillingEnemy()
+    {
+        if (TypeOfEnemy == EnemiesType.Type1)
+            return 5;
+        else if (TypeOfEnemy == EnemiesType.Type2)
+            return 8;
+        else if (TypeOfEnemy == EnemiesType.Type3)
+            return 10;
+
+        else return -999999;
     }
 
     private void Explode(GameObject missile)
     {
-        this.gameObject.SetActive(false);
-        missile.SetActive(false);
+        GameObject.Destroy(missile);
+        GameObject.Destroy(this.gameObject);
+
     }
 
     private GameObject LunchMissileFrom(Vector3 position)
@@ -71,4 +88,5 @@ public class EnemyScript : MonoBehaviour
 
         return go1;
     }
+
 }

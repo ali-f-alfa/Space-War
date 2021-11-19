@@ -8,7 +8,8 @@ public enum TagNames
     EnemyMissile,
     EnemyType1,
     EnemyType2,
-    EnemyType3
+    EnemyType3,
+    RemoveZone
 }
 
 public enum EnemiesType

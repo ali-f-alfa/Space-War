@@ -10,8 +10,16 @@ public class ShipMove : MonoBehaviour
     private Vector3 moveVector;
     public Sprite MissileSprite;
 
+    public EventSystemCustom eventSystem;
+    public int Life;
+    public int Score;
+    private bool Isblinking;
+
     void Start()
     {
+        Life = 3;
+        Score = 0;
+        Isblinking = false;
         moveVector = new Vector3(1 * shipMovingSpeed, 0, 0);
         //jumpAmount = 1f;
         //MissileRb = Missile.GetComponent<Rigidbody2D>();
@@ -20,16 +28,14 @@ public class ShipMove : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && (transform.position.x <= 9))
         {
             transform.position += moveVector;
-
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) && (transform.position.x >= -9.1))
         {
             transform.position -= moveVector;
-
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -43,18 +49,18 @@ public class ShipMove : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D Collider)
     {
 
-        if (Collider.gameObject.CompareTag(TagNames.EnemyMissile.ToString()))
+        if (Collider.gameObject.CompareTag(TagNames.EnemyMissile.ToString()) && !Isblinking)
         {
             Explode(Collider.gameObject);
+            eventSystem.OnCharacterHit.Invoke();
             //Debug.Log("collision");
         }
     }
 
     private void Explode(GameObject EnemyMissile)
     {
-        //todo: heart decrease on UI and restart player
-        this.gameObject.SetActive(false);
-        EnemyMissile.SetActive(false);
+        //this.gameObject.SetActive(false);
+        GameObject.Destroy(EnemyMissile);
     }
 
     private GameObject LunchMissileFrom(Vector3 position) 
@@ -76,4 +82,21 @@ public class ShipMove : MonoBehaviour
         return go1;
     }
 
+    public void BlinkPlayer(int numBlinks)
+    {
+        StartCoroutine(DoBlinks(numBlinks, 0.3f));
+    }
+
+    public IEnumerator DoBlinks(int numBlinks, float seconds)
+    {
+        this.Isblinking = true;
+        Renderer r = this.gameObject.GetComponent<Renderer>();
+        for (int i = 0; i < numBlinks * 2; i++)
+        {
+            r.enabled = !r.enabled;
+            yield return new WaitForSeconds(seconds);
+        }
+        r.enabled = true;
+        this.Isblinking = false;
+    }
 }

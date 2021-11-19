@@ -9,6 +9,7 @@ TagManager:
   - EnemyType1
   - EnemyType2
   - EnemyType3
+  - RemoveZone
   layers:
   - Default
   - TransparentFX
