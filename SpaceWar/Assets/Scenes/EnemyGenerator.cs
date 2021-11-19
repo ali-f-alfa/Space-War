@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class EnemyGenerator : MonoBehaviour
 {
     public float missileMovingSpeed;
@@ -11,27 +12,71 @@ public class EnemyGenerator : MonoBehaviour
     public Sprite EnemyType3Sprite;
 
     public EventSystemCustom eventSystem;
+    public List<GameObject> allAliveEnemies;
+    public int rateOfEnemystrike;
+    private int Level;
+    private bool isLoading;
 
     void Start()
     {
-        initializeEnemies();
+        Level = 1;
+        rateOfEnemystrike = 90;
+        isLoading = false;
+        allAliveEnemies = new List<GameObject>();
+        initializeEnemiesForLevel(1);
     }
 
     
     void Update()
     {
+        if ((allAliveEnemies.Count == 0) && !isLoading)
+        {
+            isLoading = true;
+            StartCoroutine(StartNewLevel(++Level));
+        }
+
+        else if ((UnityEngine.Random.Range(0, 1000) % rateOfEnemystrike == 0) && !isLoading)
+        {
+            allAliveEnemies[Random.Range(0, allAliveEnemies.Count)].GetComponent<EnemyScript>().LunchMissile();
+        }
         
+
     }
 
-    public void initializeEnemies()
+    public void initializeEnemiesForLevel(int L)
     {
-        for (int i = 0; i < 9; i++)
-            CreateEnemy(EnemiesType.Type3, new Vector2(2f*(i - 4), 4f));
-        for (int i = 0; i < 13; i++)
-            CreateEnemy(EnemiesType.Type2, new Vector2(1.3f*(i - 6), 2.5f));
-        for (int i = 0; i < 15; i++)
-            CreateEnemy(EnemiesType.Type1, new Vector2(1.1f* (i - 7), 1.2f));
-
+        if (L == 1)
+        {
+            for (int i = 0; i < 9; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type3, new Vector2(2f * (i - 4), 4f)));
+            for (int i = 0; i < 13; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(1.3f * (i - 6), 2.5f)));
+            for (int i = 0; i < 15; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type1, new Vector2(1.1f * (i - 7), 1.2f)));
+        }
+        else if (L == 2)
+        {
+            for (int i = 0; i < 4; i++) {
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type3, new Vector2(2f * (2*i - 4), 4f))); 
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(2f * (2*i - 3), 4f))); 
+            }
+            for (int i = 0; i < 13; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(1.3f * (i - 6), 2.5f)));
+            for (int i = 0; i < 15; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type1, new Vector2(1.1f * (i - 7), 1.2f)));
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type3, new Vector2(2f * (2 * i - 4), 4f)));
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(2f * (2 * i - 3), 4f)));
+            }
+            for (int i = 0; i < 13; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type2, new Vector2(1.3f * (i - 6), 2.5f)));
+            for (int i = 0; i < 15; i++)
+                allAliveEnemies.Add(CreateEnemy(EnemiesType.Type1, new Vector2(1.1f * (i - 7), 1.2f)));
+        }
     }
 
     public GameObject CreateEnemy(EnemiesType enemyType, Vector2 position)
@@ -76,5 +121,12 @@ public class EnemyGenerator : MonoBehaviour
 
         //enemyRb.velocity = transform.up * -1 * missileMovingSpeed;
         return enemy;
+    }
+    
+    public IEnumerator StartNewLevel(int level)
+    {
+        yield return new WaitForSeconds(5f);
+        initializeEnemiesForLevel(level);
+        this.isLoading = false;
     }
 }

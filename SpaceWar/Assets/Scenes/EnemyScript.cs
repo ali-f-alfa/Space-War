@@ -6,33 +6,22 @@ public class EnemyScript : MonoBehaviour
 {
     public float missileMovingSpeed;
     public Sprite MissileSprite;
-    private int n;
     public EventSystemCustom eventSystem;
     public EnemiesType TypeOfEnemy;
     private ShipMove Player;
+    private EnemyGenerator EnemyGenerator;
+
     // Start is called before the first frame update
     void Start()
     {
+        EnemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
         Player = GameObject.Find("Ship").GetComponent<ShipMove>();
-        n = 1200;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (UnityEngine.Random.Range(0, 1500) % n == 0)
-        {
-            if (n > 200)
-            {
-                n /= 2;
-                //Debug.Log(n);
-
-            }
-            LunchMissileFrom(this.transform.position - new Vector3(0, 0.2f, 0));
-            //Debug.Log(n);
-
-        }
     }
 
 
@@ -62,10 +51,10 @@ public class EnemyScript : MonoBehaviour
     {
         GameObject.Destroy(missile);
         GameObject.Destroy(this.gameObject);
-
+        EnemyGenerator.allAliveEnemies.Remove(this.gameObject);
     }
 
-    private GameObject LunchMissileFrom(Vector3 position)
+    public GameObject LunchMissile()
     {
         GameObject go1 = new GameObject();
         go1.name = "moving missile enemy";
@@ -73,7 +62,7 @@ public class EnemyScript : MonoBehaviour
         Rigidbody2D missileRb = go1.AddComponent<Rigidbody2D>();
         missileRb.bodyType = RigidbodyType2D.Kinematic;
 
-        go1.transform.position = position;
+        go1.transform.position = this.transform.position - new Vector3(0, 0.2f, 0);
         go1.transform.Rotate(new Vector3(180, 0, 0));
 
         SpriteRenderer spriteRenderer = go1.AddComponent<SpriteRenderer>();
